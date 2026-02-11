@@ -13,7 +13,6 @@ import purposerose from './assets/GifData/RoseCute.gif';
 import swalbg from './assets/Lovingbg2_main.jpg';
 import loveu from './assets/GifData/cutieSwal4.gif';
 
-//! yes - Gifs Importing
 import yesgif0 from "./assets/GifData/Yes/lovecutie0.gif";
 import yesgif1 from "./assets/GifData/Yes/love2.gif";
 import yesgif2 from "./assets/GifData/Yes/love3.gif";
@@ -26,7 +25,7 @@ import yesgif8 from "./assets/GifData/Yes/lovecutie3.gif";
 import yesgif9 from "./assets/GifData/Yes/lovecutie9.gif";
 import yesgif10 from "./assets/GifData/Yes/lovecutie6.gif";
 import yesgif11 from "./assets/GifData/Yes/lovecutie4.gif";
-//! no - Gifs Importing
+
 import nogif0 from "./assets/GifData/No/breakRej0.gif";
 import nogif0_1 from "./assets/GifData/No/breakRej0_1.gif";
 import nogif1 from "./assets/GifData/No/breakRej1.gif";
@@ -38,12 +37,11 @@ import nogif6 from "./assets/GifData/No/breakRej6.gif";
 import nogif7 from "./assets/GifData/No/RejectNo.gif";
 import nogif8 from "./assets/GifData/No/breakRej7.gif";
 
-//! yes - Music Importing
 import yesmusic1 from "./assets/AudioTracks/Love_LoveMeLikeYouDo.mp3";
 import yesmusic2 from "./assets/AudioTracks/Love_EDPerfect.mp3";
 import yesmusic3 from "./assets/AudioTracks/Love_Nadaaniyan.mp3";
 import yesmusic4 from "./assets/AudioTracks/Love_JoTumMereHo.mp3";
-//! no - Music Importing
+
 import nomusic1 from "./assets/AudioTracks/Rejection_WeDontTalkAnyMore.mp3";
 import nomusic2 from "./assets/AudioTracks/Rejection_LoseYouToLoveMe.mp3";
 import nomusic3 from "./assets/AudioTracks/Reject_withoutMe.mp3";
@@ -58,25 +56,25 @@ const NoMusic = [nomusic1, nomusic2, nomusic3, nomusic4, nomusic5];
 export default function Page() {
   const [noCount, setNoCount] = useState(0);
   const [yesPressed, setYesPressed] = useState(false);
-  const [currentAudio, setCurrentAudio] = useState(null); // Tracks the currently playing song
-  const [currentGifIndex, setCurrentGifIndex] = useState(0); // Track the current gif index
+  const [currentAudio, setCurrentAudio] = useState(null); 
+  const [currentGifIndex, setCurrentGifIndex] = useState(0); 
   const [isMuted, setIsMuted] = useState(false);
   const [popupShown, setPopupShown] = useState(false);
   const [yespopupShown, setYesPopupShown] = useState(false);
 
-  const gifRef = useRef(null); // Ref to ensure gif plays infinitely
+  const gifRef = useRef(null); 
   const yesButtonSize = noCount * 16 + 16;
 
-  const [floatingGifs, setFloatingGifs] = useState([]); // Array to store active floating GIFs
+  const [floatingGifs, setFloatingGifs] = useState([]); 
   const generateRandomPositionWithSpacing = (existingPositions) => {
     let position;
     let tooClose;
-    const minDistance = 15; // Minimum distance in 'vw' or 'vh'
+    const minDistance = 15; 
   
     do {
       position = {
-        top: `${Math.random() * 90}vh`, // Keep within 90% of viewport height
-        left: `${Math.random() * 90}vw`, // Keep within 90% of viewport width
+        top: `${Math.random() * 90}vh`, 
+        left: `${Math.random() * 90}vw`, 
       };
   
       tooClose = existingPositions.some((p) => {
@@ -132,31 +130,28 @@ export default function Page() {
   };
   
   const handleMouseLeave = () => {
-    setFloatingGifs([]); // floating GIFs on mouse leave
+    setFloatingGifs([]); 
   };
 
-  // This ensures the "Yes" gif keeps restarting and playing infinitely
   useEffect(() => {
     if (gifRef.current && yesPressed && noCount>3) {
       gifRef.current.src = YesGifs[currentGifIndex];
     }
   }, [yesPressed, currentGifIndex]);
 
-  // Use effect to change the Yes gif every 5 seconds
   useEffect(() => {
     if (yesPressed && noCount>3) {
       const intervalId = setInterval(() => {
         setCurrentGifIndex((prevIndex) => (prevIndex + 1) % YesGifs.length);
-      }, 5000); // Change gif every 5 seconds
+      }, 5000); 
 
-      // Clear the interval
       return () => clearInterval(intervalId);
     }
   }, [yesPressed]);
 
   useEffect(() => {
     if (gifRef.current) {
-      gifRef.current.src = gifRef.current.src; // Reset gif to ensure it loops infinitely
+      gifRef.current.src = gifRef.current.src; 
     }
   }, [noCount]);
 
@@ -165,13 +160,12 @@ export default function Page() {
     setNoCount(nextCount);
 
     if (nextCount >= 4) {
-      const nextGifIndex = (nextCount - 4) % NoGifs.length; // Start cycling through NoGifs
+      const nextGifIndex = (nextCount - 4) % NoGifs.length; 
       if (gifRef.current) {
         gifRef.current.src = NoGifs[nextGifIndex];
       }
     }
 
-    // Play song on first press or every 7th press after
     if (nextCount === 1 || (nextCount - 1) % 7 === 0) {
       const nextSongIndex = Math.floor(nextCount / 7) % NoMusic.length;
       playMusic(NoMusic[nextSongIndex], NoMusic);
@@ -179,27 +173,27 @@ export default function Page() {
   };
   
   const handleYesClick = () => {
-    if(!popupShown){ // Only for Swal Fire Popup
+    if(!popupShown){ 
       setYesPressed(true);
     }
     if(noCount>3){
       setYesPressed(true);
-      playMusic(YesMusic[0], YesMusic); // Play the first "Yes" music by default
+      playMusic(YesMusic[0], YesMusic); 
     }
   };
   
   const playMusic = (url, musicArray) => {
     if (currentAudio) {
-      currentAudio.pause(); // Stop the currently playing song
-      currentAudio.currentTime = 0; // Reset to the start
+      currentAudio.pause(); 
+      currentAudio.currentTime = 0; 
     }
     const audio = new Audio(url);
     audio.muted = isMuted;
-    setCurrentAudio(audio); // Set the new audio as the current one
+    setCurrentAudio(audio); 
     audio.addEventListener('ended', () => {
       const currentIndex = musicArray.indexOf(url);
       const nextIndex = (currentIndex + 1) % musicArray.length;
-      playMusic(musicArray[nextIndex], musicArray); // Play the next song in the correct array
+      playMusic(musicArray[nextIndex], musicArray); 
     });
     audio.play();
   };
@@ -212,33 +206,32 @@ export default function Page() {
   };
 
   const getNoButtonText = () => {
-
     const phrases = [
       "No",
-      "Are you sure?",
-      "Really sure?",
-      "Think again!",
-      "Last chance!",
-      "Surely not?",
-      "You might regret this!",
-      "Give it another thought!",
-      "Are you absolutely certain?",
-      "This could be a mistake!",
-      "U Have a heart!💕",
-      "Don't be so cold!",
-      "Wouldn't you reconsider?",
-      "Is that your final answer?",
-      "You're breaking my heart ;(",
-      "But... why? 😢",
-      "Please, pretty please? 💖",
-      "I can't take this! 😫",
-      "Are you sure you want to do this to me? 😢",
-      "You're gonna hurt my feelings! 😥",
-      "I need you to reconsider, like now! 😓",
-      "I believe in you, don't disappoint me! 💔",
-      "My heart says yes, what about yours? ❤️",
-      "Don't leave me hanging! 😬",
-      "Plsss? :( You're breaking my heart 💔",
+      "¿Estás segura?",
+      "¿De verdad?",
+      "¡Piénsalo otra vez!",
+      "¡Última oportunidad!",
+      "¿Seguro que no?",
+      "¡Podrías arrepentirte!",
+      "¡Dale otra vuelta!",
+      "¿Absolutamente segura?",
+      "¡Esto podría ser un error!",
+      "¡Ten corazón! 💕",
+      "¡No seas tan fría!",
+      "¿No lo reconsiderarías?",
+      "¿Es tu respuesta final?",
+      "Me rompes el corazón ;(",
+      "Pero... ¿por qué? 😢",
+      "¡Por favooor! 💖",
+      "¡No puedo con esto! 😫",
+      "¿Segura que quieres hacerme esto? 😢",
+      "¡Vas a herir mis sentimientos! 😥",
+      "¡Necesito que lo pienses bien ahora! 😓",
+      "¡Confío en ti, no me falles! 💔",
+      "Mi corazón dice que sí, ¿y el tuyo? ❤️",
+      "¡No me dejes así! 😬",
+      "¿Por fi? Rompes mi corazoncito 💔",
     ];
     
     return phrases[Math.min(noCount, phrases.length - 1)];
@@ -247,24 +240,15 @@ export default function Page() {
   useEffect(() => {
     if (yesPressed && noCount < 4 && !popupShown) {
       Swal.fire({
-        title: "I love you sooo Much!!!❤️, You’ve stolen my heart completely!!! 🥰💖 But itni pyaari ladki aur itni jaldi haan? Thoda aur nakhre karke mujhe tarpaao na! 🥰✨",
+        title: "¡¡Te amo muchísimo!! ❤️ Has robado mi corazón por completo 🥰💖 Pero una chica tan linda... ¿y acepta tan rápido? ¡Hazme sufrir un poquito más con tus caprichos! 🥰✨",
         showClass: {
-          popup: `
-            animate__animated
-            animate__fadeInUp
-            animate__faster
-          `
+          popup: `animate__animated animate__fadeInUp animate__faster`
         },
         width: 700,
         padding: "2em",
         color: "#716add",
         background: `#fff url(${swalbg})`,
-        backdrop: `
-          rgba(0,0,123,0.2)
-          url(${loveu})
-          right
-          no-repeat
-        `,
+        backdrop: `rgba(0,0,123,0.2) url(${loveu}) right no-repeat`,
       });
       setPopupShown(true);
       setYesPressed(false);
@@ -274,17 +258,12 @@ export default function Page() {
   useEffect(() => {
     if (yesPressed && noCount > 3 && !yespopupShown) {
       Swal.fire({
-        title: "I love you so much!! ❤️ You are my everything, my joy, my forever. Every moment with you is a memory I’ll cherish forever, and my heart beats only for you.</br> Will you be the love of my life forever?",
+        title: "¡Te amo demasiado! ❤️ Eres mi todo, mi alegría y mi para siempre. Cada momento contigo es un tesoro, y mi corazón late solo por ti.</br> ¿Quieres ser el amor de mi vida por siempre?",
         width: 800,
         padding: "2em",
         color: "#716add",
         background: `#fff url(${swalbg})`,
-        backdrop: `
-          rgba(0,0,123,0.7)
-          url(${purposerose})
-          right
-          no-repeat
-        `,
+        backdrop: `rgba(0,0,123,0.7) url(${purposerose}) right no-repeat`,
       });
       setYesPopupShown(true);
       setYesPressed(true);
@@ -294,17 +273,12 @@ export default function Page() {
   useEffect(() => {
     if (noCount == 25) {
       Swal.fire({
-        title: "My love for you is endless, like the stars in the sky—shining for you every night, even if you don’t always notice. 🌟 I’ll wait patiently, proving every day that you’re my everything. ❤️ Please press ‘Yes’ and let’s make this a forever story. 🥰✨<br/>'True love never gives up; it grows stronger with time.'",
+        title: "Mi amor por ti no tiene fin, como las estrellas en el cielo 🌟 Esperaré pacientemente, demostrando cada día que eres mi todo. ❤️ Por favor, pulsa 'Sí' y hagamos de esto nuestra historia eterna. 🥰✨<br/>'El verdadero amor nunca se rinde; se hace más fuerte con el tiempo.'",
         width: 850,
         padding: "2em",
         color: "#716add",
         background: `#fff url(${swalbg})`,
-        backdrop: `
-          rgba(0, 104, 123, 0.7)
-          url(${nogif1})
-          right
-          no-repeat
-        `,
+        backdrop: `rgba(0, 104, 123, 0.7) url(${nogif1}) right no-repeat`,
       });
     }
   }, [noCount]);
@@ -313,7 +287,6 @@ export default function Page() {
     <>
       <div className="fixed top-0 left-0 w-screen h-screen -z-10">
         <Spline scene="https://prod.spline.design/oSxVDduGPlsuUIvT/scene.splinecode" />
-        {/* <Spline scene="https://prod.spline.design/ZU2qkrU9Eyt1PHBx/scene.splinecode" /> */}
       </div>
 
       {noCount > 16 && noCount < 25 && yesPressed == false && <MouseStealing />}
@@ -325,10 +298,10 @@ export default function Page() {
               ref={gifRef}
               className="h-[230px] rounded-lg"
               src={YesGifs[currentGifIndex]}
-              alt="Yes Response"
+              alt="Respuesta Sí"
             />
-            <div className="text-4xl md:text-6xl font-bold my-2" style={{ fontFamily: "Charm, serif", fontWeight: "700", fontStyle: "normal" }}>I Love You !!!</div>
-            <div  className="text-4xl md:text-4xl font-bold my-1" style={{ fontFamily: "Beau Rivage, serif", fontWeight: "500", fontStyle: "normal" }}> You’re the love of my life. </div> 
+            <div className="text-4xl md:text-6xl font-bold my-2" style={{ fontFamily: "Charm, serif", fontWeight: "700" }}>¡¡¡Te Amo!!!</div>
+            <div  className="text-4xl md:text-4xl font-bold my-1" style={{ fontFamily: "Beau Rivage, serif", fontWeight: "500" }}> Eres el amor de mi vida. </div> 
             <WordMareque />
           </>
         ) : (
@@ -345,7 +318,7 @@ export default function Page() {
               alt="Love Animation"
             />
             <h1 className="text-4xl md:text-6xl my-4 text-center">
-              Will you be my Valentine?
+              ¿Quieres ser mi San Valentín?
             </h1>
             <div className="flex flex-wrap justify-center gap-2 items-center">
               <button
@@ -355,7 +328,7 @@ export default function Page() {
                 style={{ fontSize: yesButtonSize }}
                 onClick={handleYesClick}
               >
-                Yes
+                Sí
               </button>
               <button
                 onMouseEnter={handleMouseEnterNo}
@@ -391,27 +364,12 @@ export default function Page() {
 
 const Footer = () => {
   return (
-    <a
-      className="fixed bottom-2 right-2 backdrop-blur-md opacity-80 hover:opacity-95 border p-1 rounded border-rose-300"
-      href="https://github.com/UjjwalSaini07"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Made with{" "}
+    <div className="fixed bottom-2 right-2 backdrop-blur-md opacity-80 border p-1 rounded border-rose-300">
+      Hecho con{" "}
       <span role="img" aria-label="heart">
         ❤️
       </span>
-      {" "}by Ujjwal
-    </a>
+      {" "}para ti
+    </div>
   );
 };
-
-
-
-
-
-
-
-// ! Pathways-
-// https://app.spline.design/file/48a9d880-40c9-4239-bd97-973aae012ee0
-// https://app.spline.design/file/72e6aee2-57ed-4698-afa7-430f8ed7bd87
