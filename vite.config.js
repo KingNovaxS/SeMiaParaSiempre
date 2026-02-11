@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/react-swc'
 
-// Refer to this main Documentation - https://vitejs.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/SeMiaParaSiempre/', 
 })
